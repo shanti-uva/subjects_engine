@@ -1,0 +1,36 @@
+# Subjects engine view localization file for Tibetan.
+bo:
+    app:
+        short: 'SHANTI Subjects'
+        this: 'SHANTI Subjects for Science, Humanity and Arts'
+    entry: 'SHANTI Subjects Entry'
+    feature:
+        detail:
+            one: 'Subject Detail'
+            other: 'Subject Details'
+        id_generator: 'Subject ID Generator'
+        numbers_to_generate: 'Number of subjects to generate'
+        range: 'Subject Range'
+        record:
+            one: '%{what} subject'
+            other: '%{what} subjects'
+        unused_ids: 'Unused Subject IDs'
+    priorit:
+        ization_of:
+            feature_types: 'Prioritization of Subject Types'
+    snippet:
+        characteristic_needs_feature: 'Knowledge Map characteristics can only be associated from a subject.'
+        feature:
+            geo_code_needs_resource: 'A Feature Code can only be created from a resource that uses one.'
+            name:
+                drag_priority: 'Click a name and drag to a new location to indicate the priority between the different names. This priority sequencing of names will be used to decide which name to show on the navigational tree, and other contexts. Thus if there are two version of popular romanization of a name, for example, the prioritized one will be chosen; of if there are two alternative names, the prioritized one will be displayed; and so forth.'
+                not_related: 'Sorry, this subject does not currently have any related subjects.'
+            not:
+                contains: 'This subject does not contain other subjects.'
+                found: 'Sorry, this subject couldn''t be found. Please use the menu on the right to search or browse for a subject.'
+                related: 'Currently not related to any other subject names.'
+            return: 'Return to this subjects''s home page'
+            too_many: 'Sorry, this subject contains too many subjects for us to currently be able to provide this data.'
+            type:
+                drag_priority: 'Click a subject type and drag to a new location to indicate the priority between the different subject types. This priority sequencing of subject types will be used to decide which subject types to show on the navigational tree, and other contexts.'
+        search: 'Use the search field above to search for subjects.'

@@ -1,0 +1,35 @@
+# Subjects engine model localization file for Chinese.
+zh:
+    activerecord:
+        # Model names will be kept in lower case. Invoke .capitalize or .titleize if you need them in uppercase.
+        models:
+            feature:
+                one: 'subject'
+                other: 'subjects'
+            feature_geo_code:
+                one: 'subject code'
+                other: 'subject codes'
+            feature_name_relation:
+                one: 'subject name relation'
+                other: 'subject name relations'
+            feature_relation:
+                one: 'subject relation'
+                other: 'subject relations'
+            geo_code_type:
+                one: 'subject code type'
+                other: 'subject code types'
+            view:
+                one: 'subject language'
+                other: 'subject languages'
+        # Attribute names will be titleized.
+        attributes:
+            feature:
+                descendant:
+                    one: 'Contained Subject'
+                    other: 'Contained Subjects'
+                is_public: 'Public?'
+                object_type:
+                    one: 'Subject Type'
+                    other: 'Subject Types'
+                old_pid: 'OLD SID'
+                pid: 'SID'
