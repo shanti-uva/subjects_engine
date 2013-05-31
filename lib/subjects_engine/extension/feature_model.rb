@@ -11,6 +11,16 @@ module SubjectsEngine
         a << type if !type.nil?
         a.join('/')
       end
+      
+      def kmaps_url
+        PlacesIntegration::PlacesResource.get_url + "topics/#{self.fid}"
+      end
+      
+      def feature_count
+        Rails.cache.fetch("#{self.cache_key}/feature_count", :expires_in => 1.day) do
+          PlacesIntegration::FeatureCategoryCount.find(:all, :params => {:category_id => self.fid}).first.count
+        end
+      end
 
       module ClassMethods
       end
