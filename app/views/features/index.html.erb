@@ -4,12 +4,35 @@
 <% if !@intro_blurb.nil? %>
      <h2><%= @intro_blurb.title  %></h2>
 <%=  @intro_blurb.content.html_safe if !@intro_blurb.content.nil? %>
-<% end %>
-<ul>
-<% for feature in @top_level_nodes %>
-     <li><%= link_to feature.prioritized_name(current_view).name, feature_path(feature.fid) %></li>
-<% end %>
-</ul>
+<% end
+   cols = 2
+   col_size = @top_level_nodes.size / cols
+   row = 1 %>
+<table border="0" width="99%">
+  <tr>
+    <td valign="top" width="<%= 100/cols %>%">
+      <ul>
+<%      for feature in @top_level_nodes do
+          if feature.is_public? %>
+            <li><%= link_to feature.prioritized_name(current_view).name, feature_path(feature.fid) %></li>
+<%        else
+            if logged_in? %>
+              <li class="unpublished"><%= link_to feature.prioritized_name(current_view).name, feature_path(feature.fid) %></li>
+<%          end
+          end
+          if row>col_size %>
+      </ul>
+    </td>
+    <td valign="top">
+      <ul>
+<%          row = 0
+          end
+          row+=1 %>
+<%      end %>
+      </ul>
+    </td>
+  <tr>
+</table>
   </div>
 </div>
 <%= # Check for outdated, hash-based paths for features, like "/#59" and redirect them to the correct path
