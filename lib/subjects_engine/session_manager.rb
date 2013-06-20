@@ -2,7 +2,7 @@ module SubjectsEngine
   module SessionManager
     protected
     def default_perspective_code
-      'hum'
+      'gen'
     end
     
     # Inclusion hook to make #current_perspective
