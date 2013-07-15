@@ -13,7 +13,7 @@ module SubjectsEngine
       end
       
       def kmaps_url
-        PlacesIntegration::PlacesResource.get_url + "topics/#{self.fid}"
+        "#{PlacesIntegration::PlacesResource.get_url}topics/#{self.fid}"
       end
       
       def feature_count
