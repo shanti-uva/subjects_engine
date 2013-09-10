@@ -32,4 +32,4 @@ en:
                     one: 'Subject Type'
                     other: 'Subject Types'
                 old_pid: 'OLD SID'
-                pid: 'SID'
+                pid: 'Subject ID'
