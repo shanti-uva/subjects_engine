@@ -5,6 +5,10 @@ module SubjectsEngine
 
       included do
       end
+      
+      def pid
+        "S#{self.fid}"
+      end
 
       def kmap_path(type = nil)
         a = ['places', self.fid]
