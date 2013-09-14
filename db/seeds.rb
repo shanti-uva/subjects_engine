@@ -2,7 +2,5 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
 
-[ { :code => 'sci', :is_public => true, :name => 'Sciences' },
-  { :code => 'hum', :is_public => true, :name => 'Humanities' },
-  { :code => 'art', :is_public => true, :name => 'Arts' }
+[ { :code => 'gen', :is_public => true, :name => 'General' }
 ].each{|a| Perspective.update_or_create(a)}
