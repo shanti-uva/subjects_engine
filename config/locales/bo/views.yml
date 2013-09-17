@@ -2,7 +2,7 @@
 bo:
     app:
         short: 'SHANTI Subjects'
-        this: 'SHANTI Subjects'
+        this: 'SHANTI Knowledge Maps of Subjects'
     entry: 'SHANTI Subjects Entry'
     feature:
         detail:
