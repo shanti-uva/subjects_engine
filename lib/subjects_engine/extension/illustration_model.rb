@@ -7,8 +7,8 @@ module SubjectsEngine
       end
       
       def place
-        fid = self.picture.location
-        fid.nil? ? nil : PlacesIntegration::Feature.find(fid)
+        fid = self.picture.locations.first
+        fid.nil? ? nil : PlacesIntegration::Feature.find(fid.to_i)
       end
       
       module ClassMethods
