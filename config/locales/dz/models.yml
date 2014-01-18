@@ -15,6 +15,9 @@ dz:
             feature_relation:
                 one: 'subject relation'
                 other: 'subject relations'
+            feature_relation_type:
+                one: 'subject relation type'
+                other: 'subject relation types'
             geo_code_type:
                 one: 'subject code type'
                 other: 'subject code types'
