@@ -18,7 +18,7 @@ module SubjectsEngine
         #if !search_scope.blank?
         #  case search_scope
         #  when 'fid'
-        #    feature = Feature.find(:first, :conditions => {:is_public => 1, :fid => params[:filter].gsub(/[^\d]/, '').to_i})
+        #    feature = Feature.where(:is_public => 1, :fid => params[:filter].gsub(/[^\d]/, '').to_i).first
         #    if !feature.id.nil?
         #      render :url => {:action => 'expand_and_show',  :id => '59' }, :layout => false
         #    else
@@ -92,7 +92,7 @@ module SubjectsEngine
         feature = Feature.get_by_fid(params[:id])
         @features = feature.descendants.reject{|f| f.feature_count.to_i <= 0 }
         @view = params[:view_code].nil? ? nil : View.get_by_code(params[:view_code])
-        @view ||= View.get_by_code('roman.popular')
+        @view ||= View.get_by_code(default_view_code)
         respond_to do |format|
           format.xml  { render 'list' }
           format.json { render :json => Hash.from_xml(render_to_string(:action => 'list.xml.builder')) }
@@ -102,7 +102,7 @@ module SubjectsEngine
       def all_with_places
         @feature = Feature.get_by_fid(params[:id])
         @view = params[:view_code].nil? ? nil : View.get_by_code(params[:view_code])
-        @view ||= View.get_by_code('roman.popular')
+        @view ||= View.get_by_code(default_view_code)
         respond_to do |format|
           format.xml
           format.json { render :json => Hash.from_xml(render_to_string(:action => 'all_with_places.xml.builder')) }
