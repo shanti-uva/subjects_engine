@@ -18,7 +18,7 @@ module SubjectsEngine
         #if !search_scope.blank?
         #  case search_scope
         #  when 'fid'
-        #    feature = Feature.where(:is_public => 1, :fid => params[:filter].gsub(/[^\d]/, '').to_i).first
+        #    feature = Feature.find_by(is_public: 1, fid: params[:filter].gsub(/[^\d]/, '').to_i)
         #    if !feature.id.nil?
         #      render :url => {:action => 'expand_and_show',  :id => '59' }, :layout => false
         #    else
