@@ -108,6 +108,26 @@ module SubjectsEngine
           format.json { render :json => Hash.from_xml(render_to_string(:action => 'all_with_places.xml.builder')) }
         end
       end
+      
+      def fancy_nested_with_places
+        params_id = params[:id]
+        @view = params[:view_code].nil? ? nil : View.get_by_code(params[:view_code])
+        @view ||= View.get_by_code(default_view_code)
+        @perspective = params[:perspective_code].nil? ? nil : Perspective.get_by_code(params[:perspective_code])
+        @perspective ||= Perspective.get_by_code(default_perspective_code)
+        if params_id.nil?
+          @features = Feature.current_roots(@perspective, @view).reject{ |f| f.feature_count.to_i <= 0 }.sort_by{ |f| f.prioritized_name(@view).name }.reject{ |f| f.feature_count.to_i <= 0 }
+        else
+          @feature = Feature.get_by_fid(params_id)
+        end
+        respond_to do |format|
+          format.xml { render 'fancy_nested_with_places_collection' if params_id.nil? }
+          format.json do
+            hash = Hash.from_xml(render_to_string(:action => params_id.nil? ? 'fancy_nested_with_places_collection.xml.builder' : 'fancy_nested_with_places.xml.builder'))
+            render :json => hash['features']
+          end
+        end
+      end
     end
   end
 end
