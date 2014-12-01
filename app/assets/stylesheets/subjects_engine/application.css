@@ -11,6 +11,12 @@
  *= require_self
  */
 
+.titlearea, .breadwrap ol li .icon, .ss-full-tabs.nav-tabs > li.active a, .ss-full-tabs.nav-tabs > li.active a:hover {
+    background: none repeat scroll 0 0 #dc3c47;
+}
+
+/* OLD STUFF: */
+
 #FeaturePanel .has-right-margin{
 	padding-right: 400px !important;
 }
