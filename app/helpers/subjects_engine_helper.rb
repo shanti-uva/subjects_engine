@@ -8,4 +8,8 @@ module SubjectsEngineHelper
       :related => {:index => 3, :title => 'Related', :shanticon => 'subjects'}
     }
   end
+  
+  def kmaps_url(feature)
+    "#{PlacesIntegration::PlacesResource.get_url}topics/#{feature.fid}"
+  end
 end

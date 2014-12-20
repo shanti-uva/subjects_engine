@@ -9,16 +9,6 @@ module SubjectsEngine
       def pid
         "S#{self.fid}"
       end
-
-      def kmap_path(type = nil)
-        a = ['topics', self.fid]
-        a << type if !type.nil?
-        a.join('/')
-      end
-      
-      def kmaps_url
-        "#{PlacesIntegration::PlacesResource.get_url}topics/#{self.fid}"
-      end
       
       def feature_count
         Rails.cache.fetch("#{self.cache_key}/feature_count", :expires_in => 1.day) do
