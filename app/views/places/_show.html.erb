@@ -1,0 +1,24 @@
+<div class="left" id="RelatedPlaces">
+  <div class="has-right-margin has-ajax-pagination">
+    <h2><%= ts 'associate.d.with', :what => PlacesIntegration::Feature.human_name(:count => :many).capitalize, :whom => @feature.prioritized_name(current_view) %></h2>
+    <div class="pagination-click-results">
+<%    if @places.empty? %>
+	    <p>
+<%=       t('found.none.records', :what => t('associate.d.record', :what => PlacesIntegration::Feature.human_name(:count => 1))).capitalize.s %>
+	    </p>
+<%    else %>
+	    <ul style="list-style-type:square; margin-left:2em;">
+<%      for place in @places do %>
+	      <li class="normal"><%= link_to h(place['header']), PlacesIntegration::Feature.element_url(place['id'], :format => 'html') %></li>
+<%      end %>
+	    </ul>
+	    <p class="pagination" style="text-align: left;"><%= will_paginate @places, :container => false %></p>
+<%    end %>
+    </div>
+  </div>
+</div>
+<%= javascript_on_load do %>
+      document.title = '<%= t 'app.this' %>';
+      // Ajaxify the pagination for lists of features
+      $('.has-ajax-pagination .pagination').find('a').attr('data-remote', true);
+<%  end %>

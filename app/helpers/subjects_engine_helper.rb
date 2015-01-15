@@ -10,6 +10,6 @@ module SubjectsEngineHelper
   end
   
   def kmaps_url(feature)
-    "#{PlacesIntegration::PlacesResource.get_url}topics/#{feature.fid}"
+    feature_places_path(feature.fid)
   end
 end
