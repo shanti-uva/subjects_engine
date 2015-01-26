@@ -34,26 +34,7 @@
 		<div class="region region-search-flyout">
 			<div id="block-kmaps-navigator-kmaps-navigator-block" class="block block-kmaps-navigator">
 				<div class="content">
-					<div id="kmaps-search">
-					<!-- section id="kmaps-search" role="search" -->
-						<!-- section class="view-section" style="display:block;" -->
-							<h2 class="menu-item-browse"><%= ts 'browse.this' %></h2>
-<%                          active_item = active_menu_item %>
-							<div id="NodeTree" <%= ' style="display:none"' unless active_item == 'browse' %>>
-								<div id="NodeTreeList">
-<%                                if @feature.nil? %>
-<%=                                 render :partial => "features/node_tree", :locals => { :children => @top_level_nodes } %>
-<%                                else %>
-							        <img src="http://thlib.org/global/images/ajax-loader.gif" alt="" style="display:inline;" /> <%= ts :loading %>
-<%                                end
-                                  unless @feature.nil? %>
-<%=                                 javascript_on_load "NodeTree.loadExpandedTree(#{@feature.closest_hierarchical_feature_id_by_perspective(current_perspective)})" %>
-<%                                end %>
-							    </div>
-							</div>
-							<!-- /section -->
-					<!-- /section -->
-				    </div>
+<%=               render :partial => "features/menu" %>
 				</div>
 			</div>
 		</div>

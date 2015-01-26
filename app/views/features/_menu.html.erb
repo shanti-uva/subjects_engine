@@ -1,0 +1,115 @@
+<% active_item = active_menu_item %>
+<section id="kmaps-search" role="search">
+  <section class="input-section" style="display:none">
+<%= form_for @search_form, url: search_features_path, remote: true do |form| %>
+    <div class="search-group">
+	  <div class="input-group" id="searcharea">
+<%=     form.text_field :filter, class: 'form-control kms', placeholder: 'Enter Search...' %>
+	    <span class="input-group-btn">
+<%=       form.button class: 'btn btn-default' do %>
+            <span class="icon"></span>
+<%        end %>
+        </span>
+      </div>
+	  <div class="form-group">
+<%=     link_to '#', class: 'advanced-link toggle-link' do %>
+          <span class="icon"></span><%= ts(:advanced) %>
+<%      end %>
+	  </div>
+<%=   javascript_on_load do %>
+        $('.advanced-link').click ( function () {
+          $(this).toggleClass("show-advanced",'fast');
+          $(".advanced-view").slideToggle('fast');
+          $(".advanced-view").toggleClass("show-options");
+        });
+<%    end %>
+    </div>
+	<section class="advanced-view" style="<%= 'display:none;' unless current_show_advanced_search  %>">
+	   <div class="form-group" id="searchScopeGroup">
+        <div>
+<%=       form.radio_button :scope, 'full_text' %> <%= ts 'search.full_text' %>
+<%=       form.radio_button :scope, 'name' %> <%= FeatureName.model_name.human.titleize.s %>
+        </div>
+        <div>
+<%=       form.radio_button :match, 'contains' %> <%= ts 'search.contains' %>
+<%=       form.radio_button :match, 'begins' %> <%= ts 'search.begins' %>
+<%=       form.radio_button :match, 'exactly' %> <%= ts 'search.exactly' %>
+        </div>
+        <div>
+<%=       form.check_box :has_descriptions %>
+<%=       form.label :has_descriptions, ts('snippet.essay.with') %>
+        </div>
+<!--    <div>  Select Scope: -->
+<%        # form.radio_button :search_scope, 'global' Global
+          # form.radio_button :search_scope, 'contextual' Contextual
+          # form.radio_button :search_scope, 'fid' THL ID 
+%>
+<!--    </div> -->
+<%=     form.hidden_field :context_id %>
+<%=     form.label :fid, "Or Go to #{Feature.human_attribute_name(:pid)}:" %>
+<%=     form.text_field :fid %>
+      </div>
+	</section>
+<%  end %>
+<%= javascript_on_load do %>
+      $('#new_search').bind("ajax:beforeSend", function() {
+	    $("#NodeSearchResults").html('<%= image_tag('interface_utils/ajax-loader.gif') %>');
+		$('.nav a[href=".listview"]').tab('show')
+	  });
+	  $('.nav a[href=".listview"]').on('shown.bs.tab', function (e) {
+		  jQuery.ajax({ type: 'POST', url: '<%= set_session_variables_features_path %>', data: 'menu_item=results', success: function(){}, error: function(){} });
+	  });
+	  $('.nav a[href=".treeview"]').on('shown.bs.tab', function (e) {
+		  jQuery.ajax({ type: 'POST', url: '<%= set_session_variables_features_path %>', data: 'menu_item=browse', success: function(){}, error: function(){} });
+	  });
+<%  end %>
+  </section>
+  <!-- BEGIN view section -->
+  <section class="view-section">
+    <ul class="nav nav-tabs">
+<%    active_item = active_menu_item %>
+      <li class="treeview<%= ' active' if active_item == 'browse' %>"><a href=".treeview" data-toggle="tab"><span class="icon shanticon-tree"></span>Tree</a></li>
+      <li class="listview<%= ' active' if active_item == 'results' %>"><a href=".listview" data-toggle="tab"><span class="icon shanticon-list"></span>List</a></li>
+    </ul>
+	<div class="tab-content">
+	  <div class="treeview tab-pane<%= ' active' if active_item == 'browse' %>">
+	    <div id="NodeTree">
+	      <div id="NodeTreeList">
+<%          if @feature.nil? %>
+<%=           render :partial => "features/node_tree", :locals => { :children => @top_level_nodes } %>
+<%          else %>
+		      <img src="http://thlib.org/global/images/ajax-loader.gif" alt="" style="display:inline;" /> <%= ts :loading %>
+<%          end
+            unless @feature.nil? %>
+<%=           javascript_on_load "NodeTree.loadExpandedTree(#{@feature.closest_hierarchical_feature_id_by_perspective(current_perspective)})" %>
+<%          end %>
+          </div>
+	    </div>
+	  </div>
+      <div class="listview tab-pane<%= ' active' if active_item == 'results' %>">
+        <div id="NodeSearchResults" >
+<%        if session[:search].blank? %>
+<%=         ts 'snippet.search' %>
+<%        else
+            begin
+              search_results = Feature.find(session[:search][:feature_ids])
+            rescue
+              search_results = nil
+              session[:search] = nil
+            end
+            if !search_results.blank? %>
+<%=           render :partial => 'features/search_results', :locals => {:use_session => true, :features => search_results} %>
+<%          end
+          end %>
+        </div>
+      </div>
+	</div>
+  </section>
+</section>
+<% # If a search is made via GET params (e.g. /features?filter=china), we need to perform it.
+   valid_search_params = [:filter, :context_id, :match, :object_type, :characteristic_id, :scope, :search_scope, :has_descriptions].collect{|p| p.to_s }
+   unless (params.keys & valid_search_params).empty? %>
+<%=  link_to '', search_features_path, :remote => true, :id => 'ajax_search_results', :style => "display:none;" %>
+<%=  javascript_tag("$('#ajax_search_results').bind('ajax:beforeSend', function(){ NodeMenu.beginSearch() })") %>
+<%=  javascript_on_load "jQuery('#ajax_search_results').click()" %>
+<% end %>
