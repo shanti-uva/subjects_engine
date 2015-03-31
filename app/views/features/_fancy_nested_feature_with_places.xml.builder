@@ -3,7 +3,7 @@ name = feature.prioritized_name(@view)
 header = name.nil? ? feature.pid : name.name
 children = feature.current_children(@perspective, @view).reject{ |f| f.feature_count.to_i <= 0 }.sort_by do |f|
   name = f.prioritized_name(@view)
-  name.nil? ? f.pid : name.name
+  [f.position, name.nil? ? f.pid : name.name]
 end
 caption = feature.caption
 options = { :key => feature.fid, :title => header }

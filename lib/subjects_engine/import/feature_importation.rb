@@ -3,7 +3,7 @@ require 'kmaps_engine/import/feature_importation'
 module SubjectsEngine
   class FeatureImportation < KmapsEngine::FeatureImportation
     # Currently supported fields:
-    # features.fid, features.old_pid, feature_names.delete, feature_names.is_primary.delete
+    # features.fid, features.old_pid, features.position, feature_names.delete, feature_names.is_primary.delete
     # i.feature_names.existing_name
     # i.feature_names.name, i.feature_names.position, i.feature_names.is_primary,
     # i.languages.code/name, i.writing_systems.code/name, i.alt_spelling_systems.code/name
@@ -49,11 +49,13 @@ module SubjectsEngine
         self.fields = row.to_hash.delete_if{ |key, value| value.blank? }
         current+=1
         next unless self.get_feature(current)
-        self.add_date('features', self.feature)
+        self.process_feature
         self.process_names(44)
         self.process_geocodes(4)
         feature_ids_with_changed_relations += self.process_feature_relations(15)
         self.process_descriptions(3)
+        self.process_captions(2)
+        self.process_summaries(2)
         self.feature.update_attributes({:is_blank => false, :is_public => true})
         #rescue  Exception => e
         #  puts "Something went wrong with feature #{self.feature.pid}!"

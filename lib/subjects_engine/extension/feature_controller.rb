@@ -114,7 +114,7 @@ module SubjectsEngine
         @perspective = params[:perspective_code].nil? ? nil : Perspective.get_by_code(params[:perspective_code])
         @perspective ||= Perspective.get_by_code(default_perspective_code)
         if params_id.nil?
-          @features = Feature.current_roots(@perspective, @view).reject{ |f| f.feature_count.to_i <= 0 }.sort_by{ |f| f.prioritized_name(@view).name }.reject{ |f| f.feature_count.to_i <= 0 }
+          @features = Feature.current_roots(@perspective, @view).reject{ |f| f.feature_count.to_i <= 0 }.sort_by{ |f| [f.position, f.prioritized_name(@view).name] }.reject{ |f| f.feature_count.to_i <= 0 }
         else
           @feature = Feature.get_by_fid(params_id)
         end
