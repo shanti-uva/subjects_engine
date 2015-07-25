@@ -27,6 +27,20 @@ module SubjectsEngine
         return type.nil? ? media_count_hash['Medium'] : media_count_hash[type]
       end
 
+      def solr_id
+        "subjects-#{self.fid}"
+      end
+      
+      def document_for_rsolr
+        doc = RSolr::Xml::Document.new
+        doc.add_field('tree', 'subjects')
+        per = Perspective.get_by_code('gen')
+        hierarchy = self.closest_ancestors_by_perspective(per)
+        hierarchy.each{ |f| doc.add_field('ancestors_default', f.prioritized_name(View.get_by_code('roman.popular'))) }
+        hierarchy.each{ |f| doc.add_field('ancestor_ids_default', f.fid) }
+        doc
+      end
+
       module ClassMethods
       end
     end
