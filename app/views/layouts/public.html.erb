@@ -16,11 +16,11 @@
 			</header>
 		</div> <!-- End of Banner Region -->
 		<!-- Begin Content Row -->
-		<div class="row row-offcanvas row-offcanvas-left">
+		<div class="row row-offcanvas">
 			<!-- Sidebar First Region -->
 			<!-- Begin Page Content -->
 			<section class="content-section">
-				<button type="button" class="btn btn-default view-resources" data-toggle="offcanvas" style="display:none;">
+				<button type="button" class="btn btn-default view-offcanvas-sidebar" data-toggle="offcanvas" style="display:none;">
 					<span class="icon"></span>
 				</button>
 	          	<!-- Message Area -->
@@ -30,21 +30,17 @@
 						<div class="region region-content">
 							<div id="block-system-main" class="block block-system">
 								<div class="content">
-									<div id="subjects-main">
-										<!-- Column Resources  -->
-<%=                                     universal_navigation :topics, @current_tab_id, custom_secondary_tabs(@current_tab_id) %>
-										<!-- Column Main -->
-										<section class="content-section col-xs-12 col-sm-12 col-md-9 col-lg-10 equal-height">
-											<div class="tab-content">
-												<article class="tab-pane main-col active" id="<%= @current_tab_id %>">
-<%=                                                 yield %>
-												</article>
-<%=                                             render partial: 'main/inactive_tab_content', locals: {current_app_id: :topics} %>
-											</div>
-										</section>
-										<!-- END Content -->
-										<!-- Sidebar Second Region -->
+									<!-- Column Resources  -->
+<%=                                 universal_navigation :topics, @current_tab_id, custom_secondary_tabs(@current_tab_id) %>
+									<!-- Column Main -->
+									<div class="tab-content col-xs-12 col-sm-12 col-md-9 col-lg-10 equal-height">
+										<article class="tab-pane main-col active" id="<%= @current_tab_id %>">
+<%=                                         yield %>
+										</article>
+<%=                                     render partial: 'main/inactive_tab_content', locals: {current_app_id: :topics} %>
 									</div>
+									<!-- END Content -->
+									<!-- Sidebar Second Region -->
 								</div>
 							</div>
 						</div>

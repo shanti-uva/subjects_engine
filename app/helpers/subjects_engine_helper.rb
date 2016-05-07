@@ -3,9 +3,9 @@ module SubjectsEngineHelper
   def custom_secondary_tabs_list
     # The :index values are necessary for this hash's elements to be sorted properly
     {
-      :place => {:index => 1, :title => Feature.model_name.human.titleize, :shanticon => 'overview'},
+      :place => {:index => 1, :title => 'Overview', :shanticon => 'overview'},
       :descriptions => {:index => 2, :title => 'Essays', :shanticon => 'texts'},
-      :related => {:index => 3, :title => 'Related', :shanticon => 'subjects'}
+      :related => {:index => 3, :title => Feature.model_name.human(count: :many).titleize, :shanticon => 'subjects'}
     }
   end
   
