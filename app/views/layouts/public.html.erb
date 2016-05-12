@@ -16,10 +16,11 @@
 			</header>
 		</div> <!-- End of Banner Region -->
 		<!-- Begin Content Row -->
-		<div class="row row-offcanvas">
+		<div class="row row-offcanvas row-offcanvas-left">
 			<!-- Sidebar First Region -->
+<%=         universal_navigation :topics, @current_tab_id, custom_secondary_tabs(@current_tab_id) %>
 			<!-- Begin Page Content -->
-			<section class="content-section">
+			<section class="content-section col-xs-12 col-md-9 equal-height">
 				<button type="button" class="btn btn-default view-offcanvas-sidebar" data-toggle="offcanvas" style="display:none;">
 					<span class="icon"></span>
 				</button>
@@ -31,9 +32,8 @@
 							<div id="block-system-main" class="block block-system">
 								<div class="content">
 									<!-- Column Resources  -->
-<%=                                 universal_navigation :topics, @current_tab_id, custom_secondary_tabs(@current_tab_id) %>
 									<!-- Column Main -->
-									<div class="tab-content col-xs-12 col-sm-12 col-md-9 col-lg-10 equal-height">
+									<div class="tab-content">
 										<article class="tab-pane main-col active" id="<%= @current_tab_id %>">
 <%=                                         yield %>
 										</article>
