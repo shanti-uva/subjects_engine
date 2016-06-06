@@ -1,4 +1,4 @@
-<%= header(class: "html not-front #{logged_in? ? 'logged-in' : 'not-logged-in'} no-sidebars page-subjects kmaps", stylesheet_files: ["kmaps_engine/#{current_view.code=='roman.scholar' ? 'scholar' : 'popular'}"]) %>
+<%= header(class: "html not-front #{logged_in? ? 'logged-in' : 'not-logged-in'} no-sidebars page-subjects kmaps rails", stylesheet_files: ["kmaps_engine/#{current_view.code=='roman.scholar' ? 'scholar' : 'popular'}"]) %>
 <!-- Begin Content Region -->
 <main class="main-wrapper container-fluid">
 	<article class="main-content" role="main">
@@ -35,6 +35,7 @@
 									<!-- Column Main -->
 									<div class="tab-content">
 										<article class="tab-pane main-col active" id="<%= @current_tab_id %>">
+<%=                                         render 'public/flash' %>
 <%=                                         yield %>
 										</article>
 <%=                                     render partial: 'main/inactive_tab_content', locals: {current_app_id: :topics} %>
