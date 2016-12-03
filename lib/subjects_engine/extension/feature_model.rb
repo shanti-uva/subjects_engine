@@ -4,6 +4,7 @@ module SubjectsEngine
       extend ActiveSupport::Concern
 
       included do
+        acts_as_indexable uid_prefix: 'subjects'
       end
       
       def pid
@@ -27,10 +28,6 @@ module SubjectsEngine
         return type.nil? ? media_count_hash['Medium'] : media_count_hash[type]
       end
 
-      def solr_id
-        "subjects-#{self.fid}"
-      end
-      
       def document_for_rsolr
         doc = RSolr::Xml::Document.new
         doc.add_field('tree', 'subjects')
