@@ -29,12 +29,33 @@ module SubjectsEngine
       end
 
       def document_for_rsolr
-        doc = RSolr::Xml::Document.new
-        doc.add_field('tree', 'subjects')
         per = Perspective.get_by_code('gen')
+        v = View.get_by_code('roman.popular')
+
         hierarchy = self.closest_ancestors_by_perspective(per)
-        hierarchy.each{ |f| doc.add_field('ancestors_default', f.prioritized_name(View.get_by_code('roman.popular'))) }
-        hierarchy.each{ |f| doc.add_field('ancestor_ids_default', f.fid) }
+        doc = { tree: 'subjects',
+          ancestors_default: hierarchy.collect{ |f| f.prioritized_name(View.get_by_code('roman.popular')).name },
+          ancestor_ids_default: hierarchy.collect(&:fid),
+          block_type: ['parent'],
+          '_childDocuments_'  =>  self.parent_relations.collect do |pr|
+            { id: "#{self.uid}_#{pr.feature_relation_type.code}_#{pr.parent_node.fid}",
+              block_child_type: ["related_subjects"],
+              related_subjects_id_s: self.uid,
+              related_subjects_header_s:  pr.parent_node.prioritized_name(v).name,
+              related_subjects_path_s: pr.parent_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
+              related_subjects_relation_label_s: pr.feature_relation_type.asymmetric_label,
+              related_subjects_relation_code_s: pr.feature_relation_type.code,
+              block_type: ['child'] }
+          end + self.child_relations.collect do |pr|
+            { id: "#{self.uid}_#{pr.feature_relation_type.asymmetric_code}_#{pr.child_node.fid}",
+              block_child_type: ["related_subjects"],
+              related_subjects_id_s: self.uid,
+              related_subjects_header_s: pr.child_node.prioritized_name(v).name,
+              related_subjects_path_s: pr.child_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
+              related_subjects_relation_label_s: pr.feature_relation_type.label,
+              related_subjects_relation_code_s: pr.feature_relation_type.asymmetric_code,
+              block_type: ['child'] }
+          end }
         doc
       end
 
