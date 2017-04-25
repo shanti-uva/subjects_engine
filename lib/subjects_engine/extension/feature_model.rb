@@ -40,7 +40,7 @@ module SubjectsEngine
           '_childDocuments_'  =>  self.parent_relations.collect do |pr|
             { id: "#{self.uid}_#{pr.feature_relation_type.code}_#{pr.parent_node.fid}",
               block_child_type: ["related_subjects"],
-              related_subjects_id_s: self.uid,
+              related_subjects_id_s: pr.parent_node.fid,
               related_subjects_header_s:  pr.parent_node.prioritized_name(v).name,
               related_subjects_path_s: pr.parent_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
               related_subjects_relation_label_s: pr.feature_relation_type.asymmetric_label,
@@ -49,7 +49,7 @@ module SubjectsEngine
           end + self.child_relations.collect do |pr|
             { id: "#{self.uid}_#{pr.feature_relation_type.asymmetric_code}_#{pr.child_node.fid}",
               block_child_type: ["related_subjects"],
-              related_subjects_id_s: self.uid,
+              related_subjects_id_s: pr.child_node.fid,
               related_subjects_header_s: pr.child_node.prioritized_name(v).name,
               related_subjects_path_s: pr.child_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
               related_subjects_relation_label_s: pr.feature_relation_type.label,
