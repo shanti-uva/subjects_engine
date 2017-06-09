@@ -35,7 +35,6 @@ module SubjectsEngine
             @features = Feature.where(:is_public => 1, :fid => fid.gsub(/[^\d]/, '').to_i).page(1)
           else
             joins = []
-            search.has_descriptions = !search.has_descriptions.blank? && search.has_descriptions == '1'
             @features = perform_global_search(search).where(conditions).paginate(:page => params[:page] || 1, :per_page => 10)
             @features = @features.joins(joins.join(' ')).select('features.*, DISTINCT feature.id') unless joins.empty?
           end

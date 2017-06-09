@@ -1,7 +1,7 @@
 <div class="left" id="RelatedPlaces">
   <div class="has-right-margin has-ajax-pagination">
     <h2><%= ts 'associate.d.with', :what => PlacesIntegration::Feature.human_name(:count => :many).capitalize, :whom => @feature.prioritized_name(current_view) %></h2>
-    <div class="pagination-click-results">
+    <div class="kmaps-list-columns pagination-click-results">
 <%    if @places.empty? %>
 	    <p>
 <%=       t('found.none.records', :what => t('associate.d.record', :what => PlacesIntegration::Feature.human_name(:count => 1))).capitalize.s %>
@@ -12,13 +12,25 @@
 	      <li class="normal"><%= link_to h(place['header']), PlacesIntegration::Feature.element_url(place['id'], :format => 'html') %></li>
 <%      end %>
 	    </ul>
-	    <p class="pagination" style="text-align: left;"><%= will_paginate @places, :container => false %></p>
 <%    end %>
     </div>
+	    <p class="pagination" style="text-align: left;"><%= will_paginate @places, :container => false %></p>
   </div>
 </div>
 <%= javascript_on_load do %>
       document.title = '<%= t 'app.this' %>';
       // Ajaxify the pagination for lists of features
       $('.has-ajax-pagination .pagination').find('a').attr('data-remote', true);
+
+  // Functionality for columnizer
+  $('.kmaps-list-columns:not(.subjects-in-places)').columnize({
+    width: 330,
+    lastNeverTallest : true
+  });
+  // dontsplit = don't break these headers
+  $('.places-in-places').find('.column > h6, .column > ul > li, .column ul').addClass("dontsplit");
+  // dontend = don't end column with headers
+  $('.places-in-places').find('.column > h6, .column > ul > li').addClass("dontend");
+
+  // End - Functionality for columnizer
 <%  end %>
