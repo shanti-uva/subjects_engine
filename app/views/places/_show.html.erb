@@ -23,7 +23,7 @@
       $('.has-ajax-pagination .pagination').find('a').attr('data-remote', true);
 
   // Functionality for columnizer
-  $('.kmaps-list-columns:not(.subjects-in-places)').columnize({
+  $('.kmaps-list-columns:not(.subjects-in-places):not(.already_columnized)').addClass('already_columnized').columnize({
     width: 330,
     lastNeverTallest : true
   });
