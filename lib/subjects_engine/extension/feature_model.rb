@@ -34,8 +34,6 @@ module SubjectsEngine
 
         hierarchy = self.closest_ancestors_by_perspective(per)
         doc = { tree: 'subjects',
-          ancestors_default: hierarchy.collect{ |f| f.prioritized_name(View.get_by_code('roman.popular')).name },
-          ancestor_ids_default: hierarchy.collect(&:fid),
           block_type: ['parent'],
           '_childDocuments_'  =>  self.parent_relations.collect do |pr|
             { id: "#{self.uid}_#{pr.feature_relation_type.code}_#{pr.parent_node.fid}",
