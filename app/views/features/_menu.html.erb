@@ -108,11 +108,12 @@
   </section>
 </section>
 <% feature = contextual_feature %>
+<%= javascript_include_tag 'kmaps_engine/kmaps_fancytree' %>
     <script type='text/javascript'>
 $(document).ready(function(){
         $("#tree").kmapsTree({
           termindex_root: "<%= Flare.session.config.scheme+'://'+Flare.session.config.hostname+Flare.session.config.path %>",
-          kmindex_root: "<%= Flare.session.config.scheme+'://'+Flare.session.config.hostname+'/solr/kmassets_dev' %>",
+          kmindex_root: "<%= Flare.session.config.scheme+'://'+Flare.session.config.hostname+'/solr/kmassets_predev' %>",
           type: "<%= Feature.uid_prefix %>", //subjects
           root_kmap_path: '',
           baseUrl: "<%= features_path %>",
