@@ -79,8 +79,8 @@ function collapse_all(){
 <div id='myTabs'>
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#relation_details" aria-controls="home" role="tab" data-toggle="tab">Summary</a></li>
-    <li role="presentation"><a href="#relation_tree" aria-controls="profile" role="tab" data-toggle="tab">Relationship Tree</a></li>
+    <li role="presentation" class="active"><a href="#relation_details" role="tab" data-toggle="tab">Summary</a></li>
+    <li role="presentation"><a href="#relation_tree" role="tab" data-toggle="tab">Relationship Tree</a></li>
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
@@ -114,7 +114,6 @@ function collapse_all(){
         <%=    javascript_tag("$('#link_#{div_id}').bind('ajax:beforeSend', function(){ if(!on_click('#{div_id}')) return false; });") %>
       <%   end %>
           </div> <!-- END - feature-block -->
-        </div>
         <br />
         <p>
         <%= link_to ts('tree.expand', :what => t('all.these')), '#', onclick: "expand_all()", :class => "expand-all expandable-link-contracted", :style => "font-weight:bold;font-variant:small-caps;" %>
