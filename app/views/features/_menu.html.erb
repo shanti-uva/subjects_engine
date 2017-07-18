@@ -79,12 +79,15 @@
 	</section>
 <%  end %>
 <%= javascript_on_load do %>
+  $("#kmaps-explorer-search-term").focusin(function(){
+   $(".view-section .nav.nav-tabs a[href='.listview']").tab("show");
+  });
   $("#kmaps-explorer-search-term").flyoutKmapsTypeahead({
     hostname: "<%= Feature.config.url %>",
     domain: 'subjects',
     filters_domain: 'subjects',
     root_kmap_path: null,
-    features_path: '<%= features_path %>/',
+    features_path: "<%= (defined?(admin) && admin) ? admin_features_path : features_path %>/"
   });
 <% end %>
   </section>
