@@ -79,8 +79,11 @@
 	</section>
 <%  end %>
 <%= javascript_on_load do %>
+  $("#kmaps-explorer-search-term").focusin(function(){
+   $(".view-section .nav.nav-tabs a[href='.listview']").tab("show");
+  });
   $("#kmaps-explorer-search-term").flyoutKmapsTypeahead({
-    hostname: "<%= Flare.session.config.url %>",
+    hostname: "<%= Feature.config.url %>",
     domain: 'subjects',
     filters_domain: 'subjects',
     root_kmap_path: null,
@@ -94,22 +97,11 @@
     <ul class="nav nav-tabs">
 <%    active_item = active_menu_item %>
       <li class="treeview<%= ' active' if active_item == 'browse' %>"><a href=".treeview" data-toggle="tab"><span class="icon shanticon-tree"></span>Tree</a></li>
-      <li class="listview<%= ' active' if active_item == 'results' %>"><a href=".listview" data-toggle="tab"><span class="icon shanticon-list"></span>List</a></li>
+      <li class="listview<%= ' active' if active_item == 'results' %>"><a href=".listview" data-toggle="tab"><span class="icon shanticon-list"></span>Results</a></li>
     </ul>
 	  <div class="tab-content">
 	    <div class="treeview tab-pane<%= ' active' if active_item == 'browse' %>">
-	      <div id="NodeTree">
-	        <div id="NodeTreeList">
-<%          feature = contextual_feature
-            if feature.nil? %>
-<%=           render :partial => "features/node_tree", :locals => { :children => @top_level_nodes } %>
-<%          else %>
-		          <img src="http://thlib.org/global/images/ajax-loader.gif" alt="" style="display:inline;" /> <%= ts :loading %>
-<%          end
-            unless feature.nil? %>
-<%=           javascript_on_load "NodeTree.loadExpandedTree(#{feature.closest_hierarchical_feature_id_by_perspective(current_perspective)}#{(defined?(admin) && admin) ? ', true' : ', false'})" %>
-<%          end %>
-          </div>
+	      <div id="tree" class="view-wrap">
 	      </div>
 	    </div>
       <div class="listview tab-pane<%= ' active' if active_item == 'results' %>">
@@ -118,3 +110,21 @@
 	  </div>
   </section>
 </section>
+<% feature = contextual_feature %>
+<%= javascript_include_tag 'kmaps_engine/kmaps_fancytree' %>
+    <script type='text/javascript'>
+$(document).ready(function(){
+        $("#tree").kmapsTree({
+          termindex_root: "<%= Feature.config.url %>",
+          kmindex_root: "<%= MmsIntegration::Picture.config.url %>",
+          type: "<%= Feature.uid_prefix %>", //subjects
+          root_kmap_path: '',
+          baseUrl: "<%= (defined?(admin) && admin) ? admin_features_path : features_path %>/%%ID%%",
+          expand_path: "",
+          perspective: "<%= current_perspective.code %>",
+<%        unless feature.nil? %>
+          activeNodeId: "<%= feature.fid %>",
+<%        end %>
+        });
+});
+    </script>
