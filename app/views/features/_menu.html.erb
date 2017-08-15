@@ -84,6 +84,7 @@
   });
   $("#kmaps-explorer-search-term").flyoutKmapsTypeahead({
     hostname: "<%= Feature.config.url %>",
+    hostname_assets: "<%= Flare.config.asset_url %>",
     domain: 'subjects',
     filters_domain: 'subjects',
     root_kmap_path: null,
@@ -128,3 +129,9 @@ $(document).ready(function(){
         });
 });
     </script>
+<%=   javascript_on_load do %>
+  var session_search = Cookies.getJSON('search_<%= Feature.uid_prefix %>');
+  if(session_search) {
+  $("#kmaps-explorer-search-term").flyoutKmapsTypeahead('restoreSavedSearch', session_search,'kmaps-explorer');
+  }
+<% end %>
