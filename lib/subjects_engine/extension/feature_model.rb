@@ -43,10 +43,8 @@ module SubjectsEngine
               related_subjects_id_s: "#{Feature.uid_prefix}-#{pr.parent_node.fid}",
               related_subjects_header_s:  name_str,
               related_subjects_path_s: pr.parent_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
-              related_subjects_relation_label_s: pr.feature_relation_type.label,
-              related_subjects_relation_asymmetric_label_s: pr.feature_relation_type.asymmetric_label,
+              related_subjects_relation_label_s: pr.feature_relation_type.asymmetric_label,
               related_subjects_relation_code_s: pr.feature_relation_type.code,
-              related_subjects_relation_asymmetric_code_s: pr.feature_relation_type.asymmetric_code,
               related_kmaps_node_type: 'parent',
               block_type: ['child'] }
           end + self.child_relations.collect do |pr|
@@ -58,9 +56,7 @@ module SubjectsEngine
               related_subjects_header_s: name_str,
               related_subjects_path_s: pr.child_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
               related_subjects_relation_label_s: pr.feature_relation_type.label,
-              related_subjects_relation_asymmetric_label_s: pr.feature_relation_type.asymmetric_label,
               related_subjects_relation_code_s: pr.feature_relation_type.asymmetric_code,
-              related_subjects_relation_asymmetric_code_s: pr.feature_relation_type.asymmetric_code,
               related_kmaps_node_type: 'child',
               block_type: ['child'] }
           end }
