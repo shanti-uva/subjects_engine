@@ -38,9 +38,12 @@ module SubjectsEngine
           '_childDocuments_'  =>  self.parent_relations.collect do |pr|
             name = pr.parent_node.prioritized_name(v)
             name_str = name.nil? ? nil : name.name
-            { id: "#{self.uid}_#{pr.feature_relation_type.code}_#{pr.parent_node.fid}",
+            parent = pr.parent_node
+            { id: "#{self.uid}_#{pr.feature_relation_type.code}_#{parent.fid}",
+              related_uid_s: parent.uid,
+              origin_uid_s: self.uid,
               block_child_type: ["related_subjects"],
-              related_subjects_id_s: "#{Feature.uid_prefix}-#{pr.parent_node.fid}",
+              related_subjects_id_s: "#{Feature.uid_prefix}-#{parent.fid}",
               related_subjects_header_s:  name_str,
               related_subjects_path_s: pr.parent_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
               related_subjects_relation_label_s: pr.feature_relation_type.asymmetric_label,
@@ -50,9 +53,12 @@ module SubjectsEngine
           end + self.child_relations.collect do |pr|
             name = pr.child_node.prioritized_name(v)
             name_str = name.nil? ? nil : name.name
-            { id: "#{self.uid}_#{pr.feature_relation_type.asymmetric_code}_#{pr.child_node.fid}",
+            child = pr.child_node
+            { id: "#{self.uid}_#{pr.feature_relation_type.asymmetric_code}_#{child.fid}",
+              related_uid_s: child.uid,
+              origin_uid_s: self.uid,
               block_child_type: ["related_subjects"],
-              related_subjects_id_s: "#{Feature.uid_prefix}-#{pr.child_node.fid}",
+              related_subjects_id_s: "#{Feature.uid_prefix}-#{child.fid}",
               related_subjects_header_s: name_str,
               related_subjects_path_s: pr.child_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
               related_subjects_relation_label_s: pr.feature_relation_type.label,
