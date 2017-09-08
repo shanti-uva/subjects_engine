@@ -129,9 +129,10 @@ $(document).ready(function(){
         });
 });
     </script>
-<%=   javascript_on_load do %>
-  var session_search = Cookies.getJSON('search_<%= Feature.uid_prefix %>');
-  if(session_search) {
-  $("#kmaps-explorer-search-term").flyoutKmapsTypeahead('restoreSavedSearch', session_search,'kmaps-explorer');
-  }
+<%= javascript_on_load do %>
+      var session_search = Cookies.getJSON('search_<%= Feature.uid_prefix %>');
+      if(session_search) {
+        $("#kmaps-explorer-search-term").flyoutKmapsTypeahead('restoreSavedSearch', session_search,'kmaps-explorer');
+				Cookies.remove('search_<%= Feature.uid_prefix %>');
+      }
 <% end %>
