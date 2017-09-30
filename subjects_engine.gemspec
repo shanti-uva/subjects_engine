@@ -7,11 +7,11 @@ require "subjects_engine/version"
 Gem::Specification.new do |s|
   s.name        = "subjects_engine"
   s.version     = SubjectsEngine::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of SubjectsEngine."
-  s.description = "TODO: Description of SubjectsEngine."
+  s.authors     = ["Andres Montano"]
+  s.email       = ["amontano@virginia.edu"]
+  s.homepage    = "http://subjects.kmaps.virginia.edu"
+  s.summary     = "Engine that used by subjects app which contains the subject specific locales, controllers, models and views not found in kmaps engine."
+  s.description = "Engine that used by subjects app which contains the subject specific locales, controllers, models and views not found in kmaps engine."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
