@@ -221,7 +221,7 @@ function collapse_all(){
       <section class="panel panel-content">
         <div class="panel-body">
           <p>
-          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"></strong> subordinate subjects, which you are presented with its superordinate categories in the tree below. The summary tab instead classifies <%= feature_label %>'s immediately subordinate subjects, as well as subjects non-hierarchically related to it.
+          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"></strong> subordinate subjects. You can browse those subordinate subjects as well as its superordinate categories with the tree below. See the summary tab if you instead prefer to view only  its immediately subordinate subjects grouped together in useful ways, as well as   subjects non-hierarchically related to it.
           </p>
             <div id='relation_tree_container'></div>
         </div> <!-- END panel-body -->
@@ -231,7 +231,7 @@ function collapse_all(){
       <section class="panel panel-content">
         <div class="panel-body">
           <p>
-          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"><%#= relation_counts %></strong> other features directly related to it, which are presented here. The relationships tab instead presents all subordinate and superordinate categories for <%= feature_label %>.
+          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"><%#= relation_counts %></strong> other subjects directly related to it, which are presented here. See the relationships tab if you instead prefer to browse  all subordinate and superordinate categories for <%= feature_label %>.
           </p>
         <div class="subjects-in-subjects kmaps-list-columns related-features has-ajax-pagination has-hash-feature-links">
         </div> <!-- END  subjects-in-subjects -->
