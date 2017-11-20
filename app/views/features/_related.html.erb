@@ -156,7 +156,8 @@ function collapse_all(){
       function addSummaryItems(group_key,data,container){
         for(var key in data[group_key]){ //parent,child, other
           var feature_block = jQuery('<div></div>').addClass('feature-block');
-          var header = jQuery('<h6></h6>').html(feature_name.innerText +" "+ key);
+          var header = jQuery('<h6></h6>').append(jQuery('<span class="glyphicon"></span> '));
+          header.append(feature_name.innerText +" "+ key);
           var relation_subject_list = jQuery('<ul style="list-stype:none;" class="collapsibleList"></ul>');
           var relation_subject_item = jQuery('<li class="collapsible_list_header"></li>');
           relation_subject_item.append(header);
@@ -168,6 +169,8 @@ function collapse_all(){
               var currNode = sortedFeatures[related_subject_index];
               var currNodeID = currNode["related_"+domain+"_id_s"].replace(domain+"-","");
               relation.append("<a href="+featuresPath.replace("%%ID%%",currNodeID)+">"+currNode["related_"+domain+"_header_s"]+"</a>");
+              var pop_container = jQuery('<span class="popover-kmaps" data-id="'+domain+'-'+currNodeID+'"><span class="popover-kmaps-tip"></span><span class="icon shanticon-menu3"></span></span>');
+              relation.append(jQuery(pop_container));
               related_subject_list.append(relation);
               feature_count++;
           }
@@ -236,6 +239,8 @@ function collapse_all(){
 </div> <!-- myTabs end -->
 
 <%= javascript_on_load do %>
+  var collapsibleApplied = false;
+  var popupsSet = false;
   $('#summary-tab-link[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Functionality for columnizer
     // dontsplit = don't break these headers
@@ -248,8 +253,21 @@ function collapse_all(){
       lastNeverTallest : true,
       buildOnce: true
       });
-    CollapsibleLists.apply();
-    $("ul.collapsibleList li.collapsibleListClosed").trigger("click");
+    if(!collapsibleApplied){
+      CollapsibleLists.apply();
+      collapsibleApplied = true;
+    }
+    if(!popupsSet){
+      jQuery('#relation_details .popover-kmaps').kmapsPopup({
+        termIndex: "<%= Feature.config.url %>",
+        assetIndex: "<%= Flare.config.asset_url %>",
+        domain: "<%= Feature.uid_prefix %>",
+        perspective: "<%= current_perspective.code %>",
+        featureId:  "",
+        featuresPath: "<%= features_path %>/%%ID%%"
+      });
+      popupsSet = true;
+     }
   });
   // END - Functionality for columnizer
   $(".collapsible_expand_all").on("click",function(e){
@@ -288,6 +306,19 @@ li.collapsible_list_header::before{
 }
 .collapsible_all_btn:hover{
   color: #df3d26;
+}
+li.collapsibleListOpen .glyphicon:before{
+  content: "\e082";
+}
+li.collapsibleListClosed .glyphicon:before{
+  content: "\e081";
+}
+li.collapsibleListOpen:before, li.collapsibleListClosed:before{
+  display:none !important;
+}
+.collapsibleList span.glyphicon {
+  padding-right: 5px;
+  color: #cc4c39 !important;
 }
 </style>
 <%= javascript_include_tag('collapsible_list/CollapsibleLists') %>
