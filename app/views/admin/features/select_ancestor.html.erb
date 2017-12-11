@@ -1,0 +1,18 @@
+<div>
+  <h1>Please select the Subject in the hierarchy tree where you would like to add your new Subject</h1>
+</div>
+<div id="relation_tree_container">
+</div>
+<%= javascript_include_tag 'kmaps_engine/kmaps_fancytree' %>
+<%= javascript_on_load do %>
+        $("#relation_tree_container").kmapsTree({
+          termindex_root: "<%= Feature.config.url %>",
+          kmindex_root: "<%= MmsIntegration::Picture.config.url %>",
+          type: "<%= Feature.uid_prefix %>", //subjects
+          root_kmap_path: '',
+          baseUrl: "<%= new_admin_feature_path %>?parent_id=%%ID%%",
+          expand_path: "",
+          perspective: "<%= current_perspective.code %>",
+          displayPopup: false
+        });
+<% end %>
