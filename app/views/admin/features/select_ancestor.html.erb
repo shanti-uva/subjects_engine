@@ -5,14 +5,17 @@
 </div>
 <%= javascript_include_tag 'kmaps_engine/kmaps_fancytree' %>
 <%= javascript_on_load do %>
-        $("#relation_tree_container").kmapsTree({
-          termindex_root: "<%= Feature.config.url %>",
-          kmindex_root: "<%= MmsIntegration::Picture.config.url %>",
-          type: "<%= Feature.uid_prefix %>", //subjects
-          root_kmap_path: '',
-          baseUrl: "<%= new_admin_feature_path %>?parent_id=%%ID%%",
-          expand_path: "",
-          perspective: "<%= current_perspective.code %>",
-          displayPopup: false
-        });
+  $("#relation_tree_container").kmapsFancytree({
+    featureId: "",
+    termIndex: "<%= Feature.config.url %>",
+    assetIndex: "<%= Flare.config.asset_url %>",
+    perspective: "<%= current_perspective.code %>",
+    tree: "<%= Feature.uid_prefix %>", //subjects
+    domain: "<%= Feature.uid_prefix %>", //subjects
+    seedTree: {
+      descendants: true,
+      directAncestors: true,
+    },
+    displayPopup: true
+  });
 <% end %>
