@@ -2,10 +2,6 @@ module SubjectsEngine
   module Extension
     module FeatureModel
       extend ActiveSupport::Concern
-
-      included do
-        acts_as_indexable uid_prefix: 'subjects'
-      end
       
       def pid
         "S#{self.fid}"
@@ -26,47 +22,6 @@ module SubjectsEngine
         end
         type = options[:type]
         return type.nil? ? media_count_hash['Medium'] : media_count_hash[type]
-      end
-
-      def document_for_rsolr
-        per = Perspective.get_by_code('gen')
-        v = View.get_by_code('roman.popular')
-
-        hierarchy = self.closest_ancestors_by_perspective(per)
-        doc = { tree: 'subjects',
-          block_type: ['parent'],
-          '_childDocuments_'  =>  self.parent_relations.collect do |pr|
-            name = pr.parent_node.prioritized_name(v)
-            name_str = name.nil? ? nil : name.name
-            parent = pr.parent_node
-            { id: "#{self.uid}_#{pr.feature_relation_type.code}_#{parent.fid}",
-              related_uid_s: parent.uid,
-              origin_uid_s: self.uid,
-              block_child_type: ["related_subjects"],
-              related_subjects_id_s: "#{Feature.uid_prefix}-#{parent.fid}",
-              related_subjects_header_s:  name_str,
-              related_subjects_path_s: pr.parent_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
-              related_subjects_relation_label_s: pr.feature_relation_type.asymmetric_label,
-              related_subjects_relation_code_s: pr.feature_relation_type.code,
-              related_kmaps_node_type: 'parent',
-              block_type: ['child'] }
-          end + self.child_relations.collect do |pr|
-            name = pr.child_node.prioritized_name(v)
-            name_str = name.nil? ? nil : name.name
-            child = pr.child_node
-            { id: "#{self.uid}_#{pr.feature_relation_type.asymmetric_code}_#{child.fid}",
-              related_uid_s: child.uid,
-              origin_uid_s: self.uid,
-              block_child_type: ["related_subjects"],
-              related_subjects_id_s: "#{Feature.uid_prefix}-#{child.fid}",
-              related_subjects_header_s: name_str,
-              related_subjects_path_s: pr.child_node.closest_ancestors_by_perspective(per).collect(&:fid).join('/'),
-              related_subjects_relation_label_s: pr.feature_relation_type.label,
-              related_subjects_relation_code_s: pr.feature_relation_type.asymmetric_code,
-              related_kmaps_node_type: 'child',
-              block_type: ['child'] }
-          end }
-        doc
       end
 
       module ClassMethods
