@@ -1,5 +1,9 @@
 module SubjectsEngine
   class Engine < ::Rails::Engine
+    initializer :assets do |config|
+      Rails.application.config.assets.precompile.concat(['subjects_engine/related.css'])
+    end
+
     initializer :loader do |config|
       require 'subjects_engine/extension/feature_model'
       require 'subjects_engine/extension/feature_controller'
