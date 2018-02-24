@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag('subjects_engine/related') %>
 <% feature_label = fname_labels(@feature).s %>
 <div id='myTabs'>
   <!-- Nav tabs -->
@@ -71,12 +72,12 @@
 
       // Functionality for columnizer
       // dontsplit = don't break these headers
-      $('.places-in-places').find('.column > h6, .column > ul > li, .column ul').addClass("dontsplit");
+      $('.subjects-in-subjects').find('.column > h6, .column > ul > li, .column ul').addClass("dontsplit");
       // dontend = don't end column with headers
-      $('.places-in-places').find('.column > h6, .column > ul > li').addClass("dontend");
-      $('.places-in-places').find('.feature-block').addClass("dontsplit");
+      $('.subjects-in-subjects').find('.column > h6, .column > ul > li').addClass("dontend");
+      $('.subjects-in-subjects').find('.feature-block').addClass("dontsplit");
       if(!columnizedApplied){
-        $('.kmaps-list-columns:not(.subjects-in-places):not(.already_columnized)').addClass('already_columnized').columnize({
+        $('.kmaps-list-columns:not(.places-in-subjects):not(.already_columnized)').addClass('already_columnized').columnize({
           width: 330,
           lastNeverTallest : true,
           buildOnce: true,
@@ -89,12 +90,11 @@
       }
       if(!popupsSet){
         jQuery('#relation_details .popover-kmaps').kmapsPopup({
-          termIndex: "<%= Feature.config.url %>",
-          assetIndex: "<%= Flare.config.asset_url %>",
+          featuresPath: "<%= features_path %>/%%ID%%",
           domain: "<%= Feature.uid_prefix %>",
-          perspective: "<%= current_perspective.code %>",
           featureId:  "",
-          featuresPath: "<%= features_path %>/%%ID%%"
+          mandalaURL: "https://mandala.shanti.virginia.edu/%%APP%%/%%ID%%/%%REL%%/nojs",
+          solrUtils: relatedSolrUtils
         });
         popupsSet = true;
        }
@@ -139,5 +139,4 @@
     displayPopup: true
   });
 <% end %>
-<%= stylesheet_link_tag('subjects_engine/related') %>
 <%= javascript_include_tag('collapsible_list/jquery.kmapsCollapsibleList') %>
