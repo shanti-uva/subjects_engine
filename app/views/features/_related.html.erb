@@ -1,36 +1,5 @@
+<%= stylesheet_link_tag('subjects_engine/related') %>
 <% feature_label = fname_labels(@feature).s %>
-<%= javascript_on_load do %>
-  //Related Counts on Solr
-  var termIndex = "<%= Feature.config.url %>";
-  var assetIndex = "<%= Flare.config.asset_url %>";
-  var count = 0;
-  var key =  "<%= Feature.uid_prefix %>-<%= @feature.fid %>";
-  var relatedCountsUrl =
-  termIndex + '/select?q={!child of=block_type:parent}id:' + key + '&wt=json&indent=true&group=true&group.field=block_child_type&group.limit=0&wt=json&json.wrf=?';
-  $.ajax({
-    type: "GET",
-    url: relatedCountsUrl,
-    dataType: "jsonp",
-    timeout: 90000,
-    error: function (e) {
-      console.error(e);
-    },
-    beforeSend: function () {
-    },
-    success: function (data) {
-      var updates = {};
-      $.each(data.grouped.block_child_type.groups, function (x, y) {
-      var block_child_type = y.groupValue;
-      var rel_count = y.doclist.numFound;
-      updates[block_child_type] = rel_count;
-      });
-      count = updates;
-      $(".relatedCountContainer").each(function(){
-          $(this).html(count["related_<%= Feature.uid_prefix %>"]);
-      });
-    }
-  });
-<% end %>
 <div id='myTabs'>
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
@@ -70,8 +39,22 @@
   </div> <!-- Tab Content -->
 </div> <!-- myTabs end -->
 
-<%= javascript_include_tag 'kmaps_engine/kmaps_fancytree' %>
+<%= javascript_include_tag 'kmaps_engine/kmaps_relations_tree' %>
 <%= javascript_on_load do %>
+  var relatedSolrUtils = kmapsSolrUtils.init({
+    termIndex: "<%= Feature.config.url %>",
+    assetIndex: "<%= Flare.config.asset_url %>",
+    featureId:  "<%= Feature.uid_prefix %>-<%= @feature.fid %>",
+    domain: "<%= Feature.uid_prefix %>",
+    perspective: "<%= current_perspective.code %>",
+  });
+
+  //Related Counts on Solr
+  relatedSolrUtils.getDirectDescendatCount().then(function(count){
+      $(".relatedCountContainer").each(function(){
+          $(this).html(count);
+      });
+  });
   var summaryLoaded = false;
   var collapsibleApplied = false;
   var popupsSet = false;
@@ -79,140 +62,48 @@
   $('#summary-tab-link[data-toggle="tab"]').on('shown.bs.tab', function (e) {
   //Code for Summary
   if(!summaryLoaded){
-    var termIndex = "<%= Feature.config.url %>";
-    var assetIndex = "<%= Flare.config.asset_url %>";
-    var domain = "<%= Feature.uid_prefix %>";
-    var perspective = "<%= current_perspective.code %>";
-    var SOLR_ROW_LIMIT = 200;
-    var count = 0;
-    var featureId =  "<%= Feature.uid_prefix %>-<%= @feature.fid %>";
-    var featuresPath = "<%= features_path %>/%%ID%%";
-    var fieldList = [
-      "header",
-      "id",
-      "ancestor*",
-      "caption_eng",
-      "related_"+domain+"_feature_type_s",
-      "related_"+domain+"_relation_label_s"
-    ].join(",");
-    if(domain == "places"){
-      fieldList += ",related_subjects_t";
-    }
-    var url = termIndex + "/select?" +
-    "&q=" + "{!child of=block_type:parent}id:" + featureId +
-    "&fl=*,uid,related_"+domain+"_id_s,related_"+domain+"_header_s" +","+ fieldList +
-    "&rows=" + SOLR_ROW_LIMIT +
-    "&indent=true" +
-    "&wt=json" +
-    "&json.wrf=?" +
-    "&sort=related_"+domain+"_header_s+asc";
-    $.ajax({
-      url: url,
-      dataType: 'jsonp',
-      jsonp: 'json.wrf',
-      beforeSend: function(){
-        $("#relation_details .tab-content-loading").show();
-      }
-    }).done(function(data){
-      const response = data.response;
-      if(response.numFound > 0){
-        const result = response.docs.reduce(function(acc,currentNode,index){
-          let node_type = currentNode["related_kmaps_node_type"] ;
-          if(node_type === undefined) {
-            node_type = "other";
-          }
-          if(acc[node_type] === undefined){
-            acc[node_type] =  [];
-          }
-          let relation_label = currentNode["related_"+ domain +"_relation_label_s"];
-          if(acc[node_type][relation_label] === undefined){
-            acc[node_type][relation_label] = [];
-          }
-          let node_id = currentNode['related_'+domain+'_id_s'];
-          acc[node_type][relation_label][node_id] = currentNode;
-          return acc;
-        }, []);
-        var feature_name = $('<%= feature_label %>')[0];
-        function addSummaryItems(group_key,data,container){
-          for(var key in data[group_key]){ //parent,child, other
-            var feature_block = jQuery('<div></div>').addClass('feature-block');
-            var header = jQuery('<h6></h6>').append(jQuery('<span class="glyphicon"></span> '));
-            header.append(feature_name.innerText +" "+ key);
-            var relation_subject_list = jQuery('<ul style="list-stype:none;" class="collapsibleList"></ul>');
-            var relation_subject_item = jQuery('<li class="collapsible_list_header"></li>');
-            relation_subject_item.append(header);
-            var related_subject_list = jQuery('<ul></ul>');
-            var feature_count = 0;
-            var sortedFeatures = data[group_key][key];
-            for(var related_subject_index in sortedFeatures){
-              var relation = jQuery('<li></li>');
-                var currNode = sortedFeatures[related_subject_index];
-                var currNodeID = currNode["related_"+domain+"_id_s"].replace(domain+"-","");
-                relation.append("<a href="+featuresPath.replace("%%ID%%",currNodeID)+">"+currNode["related_"+domain+"_header_s"]+"</a>");
-                var pop_container = jQuery('<span class="popover-kmaps" data-id="'+domain+'-'+currNodeID+'"><span class="popover-kmaps-tip"></span><span class="icon shanticon-menu3"></span></span>');
-                relation.append(jQuery(pop_container));
-                related_subject_list.append(relation);
-                feature_count++;
-            }
-            relation_subject_item.append(related_subject_list);
-            relation_subject_list.append(relation_subject_item);
-            feature_block.append(relation_subject_list);
-            container.append(feature_block);
-          }
-        }
-        function featureSort(features){
-          var featuresArr = [];
-          for(var key in features){
-              var index = 0;
-              while(index < featuresArr.length){
-                var curr_feature = featuresArr[index];
-                if(features[key]["related_"+domain+"_header_s"] < curr_feature["related_"+domain+"_header_s"] )
-                  break;
-                index++;
-              }
-              featuresArr.splice(index,0,features[key]);
-          }
-          return featuresArr;
-        }
-        addSummaryItems('parent',result,jQuery('.'+domain+'-in-'+domain));
-        addSummaryItems('child',result,jQuery('.'+domain+'-in-'+domain));
-        //addSummaryItems('other',result,jQuery('.'+domain+'-in-'+domain));
-      } else {
-       //Empty result set
-      }
+    $("#relation_details .tab-content-loading").show();
+    relatedSolrUtils.getSubjectsSummaryElements().then(function(result){
+      var feature_label = $('<%= feature_label %>')[0].innerText;
+      var feature_path = "<%= features_path %>/%%ID%%";
+      relatedSolrUtils.addSubjectsSummaryItems(feature_label,feature_path,'parent',result);
+      relatedSolrUtils.addSubjectsSummaryItems(feature_label,feature_path,'child',result);
+      //relatedSolrUtils.addSubjectsSummaryItems(feature_label,feature_path,'other',result);
+
       // Functionality for columnizer
       // dontsplit = don't break these headers
       $('.subjects-in-subjects').find('.column > h6, .column > ul > li, .column ul').addClass("dontsplit");
       // dontend = don't end column with headers
-      $('.subjects-in-subject').find('.column > h6, .column > ul > li').addClass("dontend");
+      $('.subjects-in-subjects').find('.column > h6, .column > ul > li').addClass("dontend");
       $('.subjects-in-subjects').find('.feature-block').addClass("dontsplit");
-      $('.kmaps-list-columns:not(.places-in-subjects):not(.already_columnized)').addClass('already_columnized').columnize({
-        width: 330,
-        lastNeverTallest : true,
-        buildOnce: true
+      if(!columnizedApplied){
+        $('.kmaps-list-columns:not(.places-in-subjects):not(.already_columnized)').addClass('already_columnized').columnize({
+          width: 330,
+          lastNeverTallest : true,
+          buildOnce: true,
         });
+        columnizedApplied = true;
+      }
       if(!collapsibleApplied){
         $('.collapsibleList').kmapsCollapsibleList();
         collapsibleApplied = true;
       }
       if(!popupsSet){
         jQuery('#relation_details .popover-kmaps').kmapsPopup({
-          termIndex: "<%= Feature.config.url %>",
-          assetIndex: "<%= Flare.config.asset_url %>",
+          featuresPath: "<%= features_path %>/%%ID%%",
           domain: "<%= Feature.uid_prefix %>",
-          perspective: "<%= current_perspective.code %>",
           featureId:  "",
-          featuresPath: "<%= features_path %>/%%ID%%"
+          mandalaURL: "https://mandala.shanti.virginia.edu/%%APP%%/%%ID%%/%%REL%%/nojs",
+          solrUtils: relatedSolrUtils
         });
         popupsSet = true;
        }
-        $("#relation_details .tab-content-loading").hide();
-        $("#relation_details .collapsible_btns_container").show();
-        summaryLoaded = true;
+      $("#relation_details .tab-content-loading").hide();
+      $("#relation_details .collapsible_btns_container").show();
+      summaryLoaded = true;
     });
-   }
-  });
-  // END - Functionality for columnizer
+  }
+  }); // END - Summary Tab on show action
   $(".collapsible_expand_all").on("click",function(e){
     $("ul.collapsibleList li.collapsibleListClosed").trigger("click");
   });
@@ -234,7 +125,7 @@
     $('.collapsibleList').kmapsCollapsibleList('collapseAll');
   });
 
-  $("#relation_tree_container").kmapsFancytree({
+  $("#relation_tree_container").kmapsRelationsTree({
     featureId: "<%= @feature.fid %>",
     termIndex: "<%= Feature.config.url %>",
     assetIndex: "<%= Flare.config.asset_url %>",
@@ -248,40 +139,4 @@
     displayPopup: true
   });
 <% end %>
-<style>
-.collapsibleList li{
-  cursor: auto;
-}
-li.collapsibleListOpen,li.collapsibleListClosed, .collapsible_all_btn{
-  cursor: pointer;
-}
-.collapsible_all_btn{
-  color: #454fa4;
-}
-.collapsible_all_btn:hover,.collapsible_all_btn_selected{
-  color: #df3d26;
-}
-li.collapsibleListOpen .glyphicon:before{
-  content: "\e082";
-}
-li.collapsibleListClosed .glyphicon:before{
-  content: "\e081";
-}
-li.collapsibleListOpen:before, li.collapsibleListClosed:before{
-  display:none !important;
-}
-.collapsibleList span.glyphicon {
-  padding-right: 5px;
-  color: #cc4c39 !important;
-}
-#relation_details .tab-content-loading{
-  position:relative;
-  top:0;
-  right:0;
-  background-image: none;
-}
-li.collapsible_list_header::before{
-  display: none !important;
-}
-</style>
-<%= javascript_include_tag('collapsible_list/jquery.collapsibleList') %>
+<%= javascript_include_tag('collapsible_list/jquery.kmapsCollapsibleList') %>
