@@ -50,7 +50,7 @@
   });
 
   //Related Counts on Solr
-  relatedSolrUtils.getDirectDescendatCount().then(function(count){
+  relatedSolrUtils.getDirectDescendantCount().then(function(count){
       $(".relatedCountContainer").each(function(){
           $(this).html(count);
       });
