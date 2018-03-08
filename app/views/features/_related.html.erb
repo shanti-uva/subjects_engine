@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag('subjects_engine/related') %>
 <% feature_label = fname_labels(@feature).s %>
+<% related_features_count = @feature.get_related_features_count %>
 <div id='myTabs'>
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
@@ -12,7 +13,7 @@
       <section class="panel panel-content">
         <div class="panel-body">
           <p>
-          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"></strong> subordinate subjects. You can browse those subordinate subjects as well as its superordinate categories with the tree below. See the summary tab if you instead prefer to view only  its immediately subordinate subjects grouped together in useful ways, as well as   subjects non-hierarchically related to it.
+          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"></strong> subordinate <%= Feature.model_name.human(count: related_features_count).s %>. <%= ts('snippet.feature.browse_related', count: related_features_count) %> See the summary tab if you instead prefer to view only  its immediately subordinate subjects grouped together in useful ways, as well as   subjects non-hierarchically related to it.
           </p>
             <div id='relation_tree_container'></div>
         </div> <!-- END panel-body -->
@@ -22,7 +23,7 @@
       <section class="panel panel-content">
         <div class="panel-body">
           <p>
-          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"><%#= relation_counts %></strong> other subjects directly related to it, which are presented here. See the relationships tab if you instead prefer to browse  all subordinate and superordinate categories for <%= feature_label %>.
+          <strong><%= feature_label %></strong> has <strong class="relatedCountContainer"><%#= relation_counts %></strong> other <%= Feature.model_name.human(count: related_features_count).s %> directly related to it, <%= ts('snippet.feature.browse_summary', count: related_features_count) %> See the relationships tab if you instead prefer to browse  all subordinate and superordinate categories for <%= feature_label %>.
           </p>
           <div class='tab-content-loading' style="display:none">Loading...</div>
           <div class="collapsible_btns_container" style="display:none" >
@@ -47,6 +48,7 @@
     featureId:  "<%= Feature.uid_prefix %>-<%= @feature.fid %>",
     domain: "<%= Feature.uid_prefix %>",
     perspective: "<%= current_perspective.code %>",
+    tree: "<%= Feature.uid_prefix %>", //subjects
   });
 
   //Related Counts on Solr
@@ -55,6 +57,7 @@
           $(this).html(count);
       });
   });
+
   var summaryLoaded = false;
   var collapsibleApplied = false;
   var popupsSet = false;
@@ -136,7 +139,8 @@
       descendants: true,
       directAncestors: false,
     },
-    displayPopup: true
+    displayPopup: true,
+    solrUtils: relatedSolrUtils
   });
 <% end %>
 <%= javascript_include_tag('collapsible_list/jquery.kmapsCollapsibleList') %>
