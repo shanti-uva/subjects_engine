@@ -57,12 +57,6 @@ $(function() {
     }
   }); // END - Summary Tab on show action
   $(".collapsible_expand_all").on("click",function(e){
-    $("ul.collapsibleList li.collapsibleListClosed").trigger("click");
-  });
-  $(".collapsible_collapse_all").on("click",function(e){
-    $("ul.collapsibleList li.collapsibleListOpen").trigger("click");
-  });
-  $(".collapsible_expand_all").on("click",function(e){
     $(".collapsible_collapse_all").removeClass("collapsible_all_btn_selected");
     if (!$(".collapsible_expand_all").hasClass("collapsible_all_btn_selected")) {
       $(".collapsible_expand_all").addClass("collapsible_all_btn_selected");
