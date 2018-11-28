@@ -54,6 +54,8 @@ module SubjectsEngine
       ipc_writer.set_encoding('ASCII-8BIT')
       puts "#{Time.now}: Processing features..."
       STDOUT.flush
+      feature_ids_with_changed_relations = Array.new
+      features_ids_to_cache = Array.new
       while current<to_i
         limit = current + interval
         limit = to_i if limit > to_i
@@ -62,14 +64,12 @@ module SubjectsEngine
           begin
             self.log.debug { "#{Time.now}: Spawning sub-process #{Process.pid}." }
             ipc_reader.close
-            feature_ids_with_changed_relations = Array.new
-            features_ids_to_cache = Array.new
             for i in current...limit
               row = rows[i]
               self.fields = row.to_hash.delete_if{ |key, value| value.blank? }
               self.fields.each_value(&:strip!)
               next unless self.get_feature(i+1)
-              self.progress_bar(i, to_i, self.feature.pid)
+              self.progress_bar(num: i, total: to_i, current: self.feature.pid)
               features_ids_to_cache << self.feature.id
               self.process_feature
               self.process_names(44)
@@ -89,7 +89,8 @@ module SubjectsEngine
                 self.log.warn { "#{Time.now}: #{self.feature.pid}: the following fields have been ignored: #{self.fields.keys.join(', ')}" }
               end
             end
-            ipc_hash = {for_relations: feature_ids_with_changed_relations, to_cache: features_ids_to_cache}
+            ipc_hash = {for_relations: feature_ids_with_changed_relations, to_cache: features_ids_to_cache,
+              bar: self.bar, num_errors: self.num_errors, valid_point: self.valid_point }
             data = Marshal.dump(ipc_hash)
             ipc_writer.puts(data.length)
             ipc_writer.write(data)
@@ -103,8 +104,15 @@ module SubjectsEngine
           end
         end
         Spawnling.wait([sid])
+        size = ipc_reader.gets
+        data = ipc_reader.read(size.to_i)
+        ipc_hash = Marshal.load(data)
+        feature_ids_with_changed_relations = ipc_hash[:for_relations]
+        features_ids_to_cache = ipc_hash[:to_cache]
+        self.update_progress_bar(bar: ipc_hash[:bar], num_errors: ipc_hash[:num_errors], valid_point: ipc_hash[:valid_point])
         current = limit
       end
+      self.reset_progress_bar
       ipc_writer.close
       sid = Spawnling.new do
         begin
@@ -112,15 +120,6 @@ module SubjectsEngine
           puts "#{Time.now}: Updating hierarchies for changed relations..."
           STDOUT.flush
           # running triggers on feature_relation
-          feature_ids_with_changed_relations = Array.new
-          features_ids_to_cache = Array.new
-          while size_s = ipc_reader.gets do
-            size = size_s.to_i
-            data = ipc_reader.read(size)
-            ipc_hash = Marshal.load(data)
-            feature_ids_with_changed_relations += ipc_hash[:for_relations]
-            features_ids_to_cache += ipc_hash[:to_cache]
-          end
           feature_ids_with_changed_relations.uniq!
           self.log.debug { "#{Time.now}: Will update hierarchy for the following feature ids (NOT FIDS):\n#{feature_ids_with_changed_relations.to_s}." }
           features_ids_to_cache += feature_ids_with_changed_relations
@@ -129,7 +128,7 @@ module SubjectsEngine
           feature_ids_with_changed_relations.each_index do |i|
             id = feature_ids_with_changed_relations[i]
             feature = Feature.find(id)
-            self.progress_bar(i, feature_ids_with_changed_relations.size, feature.pid)
+            self.progress_bar(num: i, total: feature_ids_with_changed_relations.size, current: feature.pid)
             #this has to be added to places dictionary!!!
             #feature.update_cached_feature_relation_categories
             feature.update_hierarchy
@@ -140,7 +139,7 @@ module SubjectsEngine
           features_ids_to_cache.each_index do |i|
             id = features_ids_to_cache[i]
             feature = Feature.find(id)
-            self.progress_bar(i, features_ids_to_cache.size, feature.pid)
+            self.progress_bar(num: i, total: features_ids_to_cache.size, current: feature.pid)
             feature.index
             self.log.debug "#{Time.now}: Reindexed feature #{feature.fid}."
           end
