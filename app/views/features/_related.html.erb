@@ -55,7 +55,8 @@
  feature_label: feature_label,
  feature_path: "#{features_path}/%%ID%%",
  mandala_path: "https://mandala.shanti.virginia.edu/%%APP%%/%%ID%%/%%REL%%/nojs",
- feature_fid: @feature.fid
+ feature_fid: @feature.fid,
+ language: Language.current.code
 } %>
 <%= javascript_include_tag 'kmaps_engine/kmaps_relations_tree' %>
 <%= javascript_include_tag 'subjects_engine/related-section-initializer' %>

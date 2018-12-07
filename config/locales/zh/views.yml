@@ -1,9 +1,9 @@
 # Subjects engine view localization file for Chinese.
 zh:
     app:
-        short: 'SHANTI Subjects'
-        this: 'SHANTI Knowledge Maps of Subjects'
-    entry: 'SHANTI Subjects Entry'
+        short: 'Subjects'
+        this: 'Knowledge Maps of Subjects'
+    entry: 'Subjects Entry'
     feature:
         detail:
             one: 'Subject Detail'
