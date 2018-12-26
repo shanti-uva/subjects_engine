@@ -82,11 +82,12 @@ $(function() {
     perspective: $('#related_js_data').data('perspective'),
     tree: $('#related_js_data').data('tree'), //subjects
     domain: $('#related_js_data').data('domain'), //subjects
-    seedTree: {
-      descendants: true,
-      directAncestors: false,
-    },
+    descendants: true,
+    directAncestors: true,
+    descendantsFullDetail: true,
     displayPopup: true,
-    solrUtils: relatedSolrUtils
+    sortBy: "related_"+$('#related_js_data').data('domain')+"_header_s+ASC",
+    solrUtils: relatedSolrUtils,
+    language: $('#related_js_data').data('language'),
   });
 });
