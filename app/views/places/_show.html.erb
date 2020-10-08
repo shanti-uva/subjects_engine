@@ -1,20 +1,20 @@
 <div class="left" id="RelatedPlaces">
   <div class="has-right-margin has-ajax-pagination">
-    <h2><%= ts 'associate.d.with', :what => PlacesIntegration::Feature.human_name(:count => :many).capitalize, :whom => @feature.prioritized_name(current_view) %></h2>
+    <h2><%= ts 'associate.d.with', what: PlacesIntegration::Feature.human_name(count: :many).capitalize, whom: @feature.prioritized_name(current_view) %></h2>
     <div class="kmaps-list-columns pagination-click-results">
 <%    if @places.empty? %>
 	    <p>
-<%=       t('found.none.records', :what => t('associate.d.record', :what => PlacesIntegration::Feature.human_name(:count => 1))).capitalize.s %>
+<%=       t('found.none.records', what: t('associate.d.record', what: PlacesIntegration::Feature.human_name(count: 1))).capitalize.s %>
 	    </p>
 <%    else %>
 	    <ul style="list-style-type:square; margin-left:2em;">
 <%      for place in @places do %>
-	      <li class="normal"><%= link_to h(place['header']), PlacesIntegration::Feature.element_url(place['id'], :format => 'html') %></li>
+	      <li class="normal"><%= link_to h(place['header']), PlacesIntegration::Feature.element_url(place['id'], format: '') %></li>
 <%      end %>
 	    </ul>
 <%    end %>
     </div>
-	    <p class="pagination" style="text-align: left;"><%= will_paginate @places, :container => false %></p>
+	    <p class="pagination" style="text-align: left;"><%= will_paginate @places, container: false %></p>
   </div>
 </div>
 <%= javascript_on_load do %>
