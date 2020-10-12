@@ -8,7 +8,7 @@ module SubjectsEngine
       
       def place
         pic = self.picture
-        fid = pic.instance_of?(ExternalPicture) ? pic.place_id : pic.locations.first.to_i
+        fid = pic.instance_of?(ExternalPicture) ? pic.place_id : pic.locations.first
         fid.nil? ? nil : PlacesIntegration::Feature.find(fid.to_i)
       end
       
