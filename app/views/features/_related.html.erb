@@ -21,7 +21,7 @@
       </section> <!-- END panel -->
   </div>
     <div role="tabpanel" class="tab-pane" id="relation_details">
-      <%= render partial: 'relation_details', locals: { feature_label: feature_label, related_features_counts: related_features_counts } %>
+      <%= render partial: 'relation_details', locals: { feature_label: feature_label, related_features_count: related_features_counts[:related_features], message: "See the relationships tab if you instead prefer to browse  all subordinate and superordinate categories for #{feature_label}.".html_safe } %>
     </div> <!-- END tabpanel -->
   </div> <!-- Tab Content -->
 </div> <!-- myTabs end -->
