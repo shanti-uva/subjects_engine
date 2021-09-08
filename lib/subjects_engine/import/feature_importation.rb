@@ -140,7 +140,7 @@ module SubjectsEngine
             id = features_ids_to_cache[i]
             feature = Feature.find(id)
             self.progress_bar(num: i, total: features_ids_to_cache.size, current: feature.pid)
-            feature.index
+            feature.queued_index
             self.log.debug "#{Time.now}: Reindexed feature #{feature.fid}."
           end
           Feature.commit
