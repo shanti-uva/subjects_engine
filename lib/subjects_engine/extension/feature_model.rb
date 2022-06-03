@@ -23,7 +23,11 @@ module SubjectsEngine
         type = options[:type]
         return type.nil? ? media_count_hash['Medium'] : media_count_hash[type]
       end
-
+      
+      def solr_url
+        URI.join(SubjectsIntegration::Feature.get_url, "solr/#{self.fid}.json")
+      end
+      
       module ClassMethods
       end
     end
