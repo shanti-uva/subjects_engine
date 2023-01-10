@@ -15,9 +15,6 @@ dz:
             one: '%{what} subject'
             other: '%{what} subjects'
         unused_ids: 'Unused Subject IDs'
-    priorit:
-        ization_of:
-            feature_types: 'Prioritization of Subject Types'
     snippet:
         characteristic_needs_feature: 'Knowledge Map characteristics can only be associated from a subject.'
         feature:
