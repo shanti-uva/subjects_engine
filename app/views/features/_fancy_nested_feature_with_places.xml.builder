@@ -6,10 +6,10 @@ children = feature.current_children(@perspective, @view).reject{ |f| f.feature_c
   [f.position, name.nil? ? f.pid : name.name]
 end
 caption = feature.caption
-options = { :key => feature.fid, :title => header }
+options = { key: feature.fid, title: header }
 options[:caption] = caption.content if !caption.nil?
 xml.feature(options) do
-  xml.children(:type => 'array') do
-    xml << render(:partial => 'fancy_nested_feature_with_places.xml.builder', :collection => children, :as => :feature) if !children.empty?
+  xml.children(type: 'array') do
+    xml << render(partial: 'fancy_nested_feature_with_places', format: 'xml', collection: children, as: :feature) if !children.empty?
   end
 end

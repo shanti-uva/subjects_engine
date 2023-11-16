@@ -1,0 +1,1 @@
+I18n.load_path += Dir[SubjectsEngine::Engine.root.join('config', 'locales', '**', '*.yml')]

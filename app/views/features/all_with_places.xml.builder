@@ -1,1 +1,1 @@
-xml << render(:partial => 'recursive_stripped_feature_with_places.xml.builder', :locals => {:feature => @feature})
+xml << render(partial: 'recursive_stripped_feature_with_places', format: 'xml', locals: {feature: @feature})

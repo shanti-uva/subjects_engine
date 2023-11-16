@@ -13,7 +13,7 @@ module SubjectsEngine
         end
       end
       
-      def media_count(options = {})
+      def media_count(**options)
         media_count_hash = Rails.cache.fetch("#{self.cache_key}/media_count", :expires_in => 1.day) do
           media_place_count = MmsIntegration::MediaCategoryCount.find(:all, :params => {:category_id => self.fid}).to_a
           media_count_hash = { 'Medium' => media_place_count.shift.count.to_i }

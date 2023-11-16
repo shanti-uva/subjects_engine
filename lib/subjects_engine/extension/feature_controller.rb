@@ -90,7 +90,7 @@ module SubjectsEngine
         @view ||= View.get_by_code(default_view_code)
         respond_to do |format|
           format.xml  { render 'list' }
-          format.json { render :json => Hash.from_xml(render_to_string(:action => 'list.xml.builder')) }
+          format.json { render json: Hash.from_xml(render_to_string(action: 'list', format: 'xml')) }
         end
       end
       
@@ -100,7 +100,7 @@ module SubjectsEngine
         @view ||= View.get_by_code(default_view_code)
         respond_to do |format|
           format.xml
-          format.json { render :json => Hash.from_xml(render_to_string(:action => 'all_with_places.xml.builder')) }
+          format.json { render json: Hash.from_xml(render_to_string(action: 'all_with_places', format: 'xml')) }
         end
       end
       
@@ -118,8 +118,8 @@ module SubjectsEngine
         respond_to do |format|
           format.xml { render 'fancy_nested_with_places_collection' if params_id.nil? }
           format.json do
-            hash = Hash.from_xml(render_to_string(:action => params_id.nil? ? 'fancy_nested_with_places_collection.xml.builder' : 'fancy_nested_with_places.xml.builder'))
-            render :json => hash['features']
+            hash = Hash.from_xml(render_to_string(action: params_id.nil? ? 'fancy_nested_with_places_collection' : 'fancy_nested_with_places', format: 'xml'))
+            render json: hash['features']
           end
         end
       end
