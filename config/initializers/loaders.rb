@@ -13,3 +13,8 @@ ActiveSupport.on_load(:illustration) do
   require 'subjects_engine/extension/illustration_model'
   include SubjectsEngine::Extension::IllustrationModel
 end
+
+ActiveSupport.on_load(:sessions_controller) do
+  require 'subjects_engine/extension/sessions_controller'
+  include SubjectsEngine::Extension::SessionsController
+end
