@@ -16,16 +16,16 @@ module SubjectsEngine
       def media_count(**options)
         media_count_hash = Rails.cache.fetch("#{self.cache_key}/media_count", :expires_in => 1.day) do
           media_place_count = MmsIntegration::MediaCategoryCount.find(:all, :params => {:category_id => self.fid}).to_a
-          media_count_hash = { 'Medium' => media_place_count.shift.count.to_i }
+          if media_place_count.blank?
+            media_count_hash = { 'Medium' => nil }
+          else
+            media_count_hash = { 'Medium' => media_place_count.shift.count.to_i }
+          end
           media_place_count.each{|count| media_count_hash[count.medium_type] = count.count.to_i }
           media_count_hash
         end
         type = options[:type]
         return type.nil? ? media_count_hash['Medium'] : media_count_hash[type]
-      end
-      
-      def solr_url
-        URI.join(SubjectsIntegration::Feature.get_url, "solr/#{self.fid}.json")
       end
       
       def calculate_prioritized_name(current_view)
@@ -55,6 +55,9 @@ module SubjectsEngine
       end
       
       module ClassMethods
+        def solr_url
+          URI.join(SubjectsIntegration::Feature.get_url, "solr/")
+        end
       end
     end
   end

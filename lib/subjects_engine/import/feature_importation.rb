@@ -60,7 +60,7 @@ module SubjectsEngine
         limit = current + interval
         limit = to_i if limit > to_i
         limit = rows.size if limit > rows.size
-        sid = Spawnling.new do
+        sid = Spawnling.new(kill: true) do
           begin
             self.log.debug { "#{Time.now}: Spawning sub-process #{Process.pid}." }
             ipc_reader.close
@@ -113,7 +113,7 @@ module SubjectsEngine
       end
       self.reset_progress_bar
       ipc_writer.close
-      sid = Spawnling.new do
+      sid = Spawnling.new(kill: true) do
         begin
           self.log.debug { "#{Time.now}: Spawning sub-process #{Process.pid}." }
           puts "#{Time.now}: Updating hierarchies for changed relations..."
@@ -142,7 +142,6 @@ module SubjectsEngine
             feature.queued_index
             self.log.debug "#{Time.now}: Reindexed feature #{feature.fid}."
           end
-          Feature.commit
           puts "#{Time.now}: Importation done."
           self.log.debug "#{Time.now}: Importation done."
           STDOUT.flush
