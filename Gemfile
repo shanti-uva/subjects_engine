@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # development dependencies will be added by default to the :development group.
 gemspec
 
-gem 'rails'
+gem 'rails', '~> 7.1.1'
 # jquery-rails is used by the dummy application
 gem 'jquery-rails'
 
