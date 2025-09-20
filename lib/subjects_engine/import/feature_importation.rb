@@ -130,7 +130,7 @@ module SubjectsEngine
             self.progress_bar(num: i, total: feature_ids_with_changed_relations.size, current: feature.pid)
             #this has to be added to places dictionary!!!
             #feature.update_cached_feature_relation_categories
-            feature.update_hierarchy
+            feature.queued_update_hierarchy
             self.log.debug { "#{Time.now}: Updated hierarchy for #{feature.fid}." }
           end
           puts "#{Time.now}: Reindexing changed features..."
@@ -139,7 +139,7 @@ module SubjectsEngine
             id = features_ids_to_cache[i]
             feature = Feature.find(id)
             self.progress_bar(num: i, total: features_ids_to_cache.size, current: feature.pid)
-            feature.queued_index
+            feature.queued_index(priority: Flare::IndexerJob::LOW)
             self.log.debug "#{Time.now}: Reindexed feature #{feature.fid}."
           end
           puts "#{Time.now}: Importation done."

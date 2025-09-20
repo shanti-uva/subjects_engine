@@ -1,20 +1,20 @@
 ActiveSupport.on_load(:feature) do
-  require 'subjects_engine/extension/feature_model'
-  include SubjectsEngine::Extension::FeatureModel
+  require_dependency 'subjects_engine/feature_extensions'
+  include SubjectsEngine::FeatureExtensions
 end
 
 ActiveSupport.on_load(:features_controller) do
-  require 'subjects_engine/extension/feature_controller'
-  include SubjectsEngine::Extension::FeatureController
+  require_dependency 'subjects_engine/feature_controller_extensions'
+  include SubjectsEngine::FeatureControllerExtensions
   
 end
 
 ActiveSupport.on_load(:illustration) do
-  require 'subjects_engine/extension/illustration_model'
-  include SubjectsEngine::Extension::IllustrationModel
+  require_dependency 'subjects_engine/illustration_extensions'
+  include SubjectsEngine::IllustrationExtensions
 end
 
 ActiveSupport.on_load(:sessions_controller) do
-  require 'subjects_engine/extension/sessions_controller'
-  include SubjectsEngine::Extension::SessionsController
+  require_dependency 'subjects_engine/sessions_controller_extensions'
+  include SubjectsEngine::SessionsControllerExtensions
 end

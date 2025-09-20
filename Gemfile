@@ -6,9 +6,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # development dependencies will be added by default to the :development group.
 gemspec
 
-gem 'rails', '~> 7.1.1'
+gem 'rails'
 # jquery-rails is used by the dummy application
 gem 'jquery-rails'
+
+gem 'hpricot', github: 'ycorredius/hpricot'
 
 gem 'acts_as_family_tree',        '1.2.4',        github: 'thl/acts_as_family_tree',         tag: 'v1.2.4' #path: '../../thl/engines/acts_as_family_tree'
 gem 'authenticated_system',       '2.4.4',        github: 'thl/authenticated_system',        tag: 'v2.4.4' #path: '../../thl/engines/authenticated_system'
