@@ -53,7 +53,7 @@ module SubjectsEngine
       name || popular_prioritized_name(all_names)
     end
     
-    module ClassMethods
+    class_methods do
       def solr_url
         URI.join(SubjectsIntegration::Feature.get_url, "solr/")
       end
