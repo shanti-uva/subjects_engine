@@ -87,7 +87,7 @@ GIT
 PATH
   remote: .
   specs:
-    subjects_engine (1.6.8)
+    subjects_engine (1.7.0)
       rails
 
 GEM
