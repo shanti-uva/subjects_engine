@@ -14,7 +14,7 @@
           if feature.is_public? %>
             <li><%= link_to feature.prioritized_name(current_view).name, feature_path(feature.fid) %></li>
 <%        else
-            if logged_in? %>
+            if authenticated? %>
               <li class="unpublished"><%= link_to feature.prioritized_name(current_view).name, feature_path(feature.fid) %></li>
 <%          end
           end
