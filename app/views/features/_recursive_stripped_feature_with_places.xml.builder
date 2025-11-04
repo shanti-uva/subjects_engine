@@ -8,7 +8,7 @@ if children.empty?
 else
   xml.feature(options) do # , :pid => feature.pid
     xml.features(type: 'array') do
-      xml << render(partial: 'recursive_stripped_feature_with_places', format: 'xml', collection: children, as: :feature) if !children.empty?
+      xml << render(partial: 'recursive_stripped_feature_with_places', formats: [:xml], collection: children, as: :feature) if !children.empty?
     end
   end
 end
